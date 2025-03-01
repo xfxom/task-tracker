@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="8" author="xfnet">
+        <createTable tableName="task_executors" schemaName="private">
+            <column name="task_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="task_id, user_id" constraintName="pk_task_executors" tableName="task_executors" schemaName="private"/>
+
+        <addForeignKeyConstraint baseColumnNames="task_id"
+                                 baseTableName="task_executors"
+                                 baseTableSchemaName="private"
+                                 referencedColumnNames="id"
+                                 referencedTableName="task"
+                                 referencedTableSchemaName="private"
+                                 constraintName="fk_task_executors_task"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="task_executors"
+                                 baseTableSchemaName="private"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"
+                                 referencedTableSchemaName="private"
+                                 constraintName="fk_task_executors_user"
+                                 onUpdate="CASCADE"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

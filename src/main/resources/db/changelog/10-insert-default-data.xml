@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="10" author="xfnet">
+        <insert tableName="role" schemaName="private">
+            <column name="name" value="ADMIN"/>
+        </insert>
+        <insert tableName="role" schemaName="private">
+            <column name="name" value="USER"/>
+        </insert>
+
+        <insert tableName="user" schemaName="private">
+            <column name="email" value="admin@example.com"/>
+            <column name="username" value="admin"/>
+            <column name="password" value="$2a$12$7bm52CEAOmLGDdHzlo9ZFulaFzejGYHqxOfFeSNYxv.jEAMTK5WXa"/>
+        </insert>
+        <insert tableName="user" schemaName="private">
+            <column name="email" value="admin2@example.com"/>
+            <column name="username" value="admin2"/>
+            <column name="password" value="$2a$12$7bm52CEAOmLGDdHzlo9ZFulaFzejGYHqxOfFeSNYxv.jEAMTK5WXa"/>
+        </insert>
+        <insert tableName="user" schemaName="private">
+            <column name="email" value="user1@example.com"/>
+            <column name="username" value="user1"/>
+            <column name="password" value="$2a$12$7bm52CEAOmLGDdHzlo9ZFulaFzejGYHqxOfFeSNYxv.jEAMTK5WXa"/>
+        </insert>
+        <insert tableName="user" schemaName="private">
+            <column name="email" value="user2@example.com"/>
+            <column name="username" value="user2"/>
+            <column name="password" value="$2a$12$7bm52CEAOmLGDdHzlo9ZFulaFzejGYHqxOfFeSNYxv.jEAMTK5WXa"/>
+        </insert>
+        <insert tableName="user" schemaName="private">
+            <column name="email" value="user3@example.com"/>
+            <column name="username" value="user3"/>
+            <column name="password" value="$2a$12$7bm52CEAOmLGDdHzlo9ZFulaFzejGYHqxOfFeSNYxv.jEAMTK5WXa"/>
+        </insert>
+
+        <insert tableName="user_roles" schemaName="private">
+            <column name="role_id" valueComputed="(SELECT id FROM private.role WHERE name = 'ADMIN')"/>
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="user_roles" schemaName="private">
+            <column name="role_id" valueComputed="(SELECT id FROM private.role WHERE name = 'ADMIN')"/>
+            <column name="user_id" value="2"/>
+        </insert>
+        <insert tableName="user_roles" schemaName="private">
+            <column name="role_id" valueComputed="(SELECT id FROM private.role WHERE name = 'USER')"/>
+            <column name="user_id" value="3"/>
+        </insert>
+        <insert tableName="user_roles" schemaName="private">
+            <column name="role_id" valueComputed="(SELECT id FROM private.role WHERE name = 'USER')"/>
+            <column name="user_id" value="4"/>
+        </insert>
+        <insert tableName="user_roles" schemaName="private">
+            <column name="role_id" valueComputed="(SELECT id FROM private.role WHERE name = 'USER')"/>
+            <column name="user_id" value="5"/>
+        </insert>
+
+        <insert tableName="priority" schemaName="private">
+            <column name="title" value="High"/>
+        </insert>
+        <insert tableName="priority" schemaName="private">
+            <column name="title" value="Medium"/>
+        </insert>
+        <insert tableName="priority" schemaName="private">
+            <column name="title" value="Low"/>
+        </insert>
+
+        <insert tableName="status" schemaName="private">
+            <column name="title" value="To Do"/>
+            <column name="is_global" valueBoolean="true"/>
+        </insert>
+        <insert tableName="status" schemaName="private">
+            <column name="title" value="In Progress"/>
+            <column name="is_global" valueBoolean="true"/>
+        </insert>
+        <insert tableName="status" schemaName="private">
+            <column name="title" value="Done"/>
+            <column name="is_global" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="status" schemaName="private">
+            <column name="title" value="Needs Review"/>
+            <column name="is_global" valueBoolean="false"/>
+            <column name="user_id" value="3"/>
+        </insert>
+        <insert tableName="status" schemaName="private">
+            <column name="title" value="Blocked"/>
+            <column name="is_global" valueBoolean="false"/>
+            <column name="user_id" value="3"/>
+        </insert>
+
+        <insert tableName="task" schemaName="private">
+            <column name="priority_id" value="1"/>
+            <column name="status_id" value="1"/>
+            <column name="user_id" value="3"/>
+            <column name="description" value="Fix critical bug in the system"/>
+            <column name="title" value="Critical Bug Fix"/>
+            <column name="visibility" valueBoolean="false"/>
+        </insert>
+        <insert tableName="task" schemaName="private">
+            <column name="priority_id" value="2"/>
+            <column name="status_id" value="2"/>
+            <column name="user_id" value="4"/>
+            <column name="description" value="Implement user profile feature"/>
+            <column name="title" value="User Profile"/>
+            <column name="visibility" valueBoolean="true"/>
+        </insert>
+        <insert tableName="task" schemaName="private">
+            <column name="priority_id" value="3"/>
+            <column name="status_id" value="3"/>
+            <column name="user_id" value="5"/>
+            <column name="description" value="Update documentation"/>
+            <column name="title" value="Documentation Update"/>
+            <column name="visibility" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="task_executors" schemaName="private">
+            <column name="task_id" value="1"/>
+            <column name="user_id" value="3"/>
+        </insert>
+        <insert tableName="task_executors" schemaName="private">
+            <column name="task_id" value="1"/>
+            <column name="user_id" value="4"/>
+        </insert>
+        <insert tableName="task_executors" schemaName="private">
+            <column name="task_id" value="2"/>
+            <column name="user_id" value="4"/>
+        </insert>
+        <insert tableName="task_executors" schemaName="private">
+            <column name="task_id" value="3"/>
+            <column name="user_id" value="5"/>
+        </insert>
+
+        <insert tableName="comment" schemaName="private">
+            <column name="task_id" value="1"/>
+            <column name="user_id" value="3"/>
+            <column name="content" value="I am working on this task."/>
+            <column name="parent_id" valueNumeric="NULL"/>
+        </insert>
+        <insert tableName="comment" schemaName="private">
+            <column name="task_id" value="1"/>
+            <column name="user_id" value="4"/>
+            <column name="content" value="Let me know if you need help."/>
+            <column name="parent_id" value="1"/>
+        </insert>
+        <insert tableName="comment" schemaName="private">
+            <column name="task_id" value="3"/>
+            <column name="user_id" value="5"/>
+            <column name="content" value="I updated the docs with recent changes."/>
+            <column name="parent_id" valueNumeric="NULL"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
