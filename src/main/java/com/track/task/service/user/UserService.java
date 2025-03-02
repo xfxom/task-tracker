@@ -1,4 +1,4 @@
-package com.track.task.service;
+package com.track.task.service.user;
 
 
 import com.track.task.model.User;
