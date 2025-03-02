@@ -47,6 +47,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signUp(SignUp signUp) {
 
+        log.info("User: " + signUp.getEmail() + " is registration");
+
         if (signUp.getEmail().isEmpty() || signUp.getPassword().isEmpty())
             throw new EmptyException("user");
 

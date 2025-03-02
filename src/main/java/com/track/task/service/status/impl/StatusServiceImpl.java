@@ -26,63 +26,94 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<Status> getAll() {
-        return statusRepository.findAll();
+        log.info("Fetching all statuses");
+        List<Status> statuses = statusRepository.findAll();
+        log.debug("Found {} statuses", statuses.size());
+        return statuses;
     }
 
     @Override
     public Optional<Status> getById(Long id) {
-        return statusRepository.findById(id);
+        log.info("Fetching status by id: {}", id);
+        Optional<Status> status = statusRepository.findById(id);
+        if (status.isPresent()) {
+            log.debug("Status with id: {} found", id);
+        } else {
+            log.warn("Status with id: {} not found", id);
+        }
+        return status;
     }
 
     @Override
     public Status add(StatusDTO statusDTO, String email) {
-
+        log.info("Creating new status. Requested by: {}", email);
         Status status = new Status();
-
         status.setTitle(statusDTO.getTitle());
         status.setIsGlobal(false);
+        log.debug("Initial status setup: {}", status);
 
         if (adminUserService.isAdminByEmail(email)) {
+            log.debug("Admin privileges detected for user: {}", email);
             if (statusDTO.getUserId() != null && statusDTO.getIsGlobal() != null) {
+                log.debug("Processing admin-specific settings");
                 status.setUser(
                         userService.getUserById(statusDTO.getUserId())
-                                .orElseThrow(() -> new NotFoundException("User not found"))
+                                .orElseThrow(() -> {
+                                    log.error("User not found with id: {}", statusDTO.getUserId());
+                                    return new NotFoundException("User not found");
+                                })
                 );
                 status.setIsGlobal(statusDTO.getIsGlobal());
+                log.debug("Set user: {} and global flag: {}", statusDTO.getUserId(), statusDTO.getIsGlobal());
             }
         }
 
-        statusRepository.save(status);
-        return status;
+        Status savedStatus = statusRepository.save(status);
+        log.info("Successfully created status with id: {}", savedStatus.getId());
+        return savedStatus;
     }
 
     @Override
     public Status update(Long statusId, StatusDTO statusDTO) {
-
+        log.info("Updating status with id: {}", statusId);
         Status status = getById(statusId)
-                .orElseThrow(() -> new NotFoundException("Status not found"));
+                .orElseThrow(() -> {
+                    log.error("Status not found for update: {}", statusId);
+                    return new NotFoundException("Status not found");
+                });
 
+        log.debug("Updating title from '{}' to '{}'", status.getTitle(), statusDTO.getTitle());
         status.setTitle(statusDTO.getTitle());
 
-        statusRepository.save(status);
-        return status;
-
+        Status updatedStatus = statusRepository.save(status);
+        log.info("Successfully updated status with id: {}", statusId);
+        return updatedStatus;
     }
 
     @Override
     public void delete(Long statusId, String email) throws ForbiddenException {
-
+        log.info("Attempting to delete status: {} by user: {}", statusId, email);
         Status status = getById(statusId)
-                .orElseThrow(() -> new NotFoundException("Status not found"));
+                .orElseThrow(() -> {
+                    log.error("Status not found for deletion: {}", statusId);
+                    return new NotFoundException("Status not found");
+                });
 
         if (adminUserService.isAdminByEmail(email)) {
-            if (status.getUser().getId() != null && status.getIsGlobal() != null) {
+            log.debug("Admin delete attempt for status: {}", statusId);
+            if (status.getUser() != null && status.getIsGlobal() != null) {
                 if (status.getIsGlobal()) {
+                    log.debug("Deleting global status: {}", statusId);
                     statusRepository.deleteById(statusId);
+                    log.info("Successfully deleted global status: {}", statusId);
                 } else {
+                    log.warn("Attempt to delete non-global status by admin: {}", statusId);
                     throw new ForbiddenException();
                 }
             }
+        } else {
+            log.warn("Unauthorized delete attempt by non-admin user: {}", email);
+            throw new ForbiddenException();
         }
     }
 }
