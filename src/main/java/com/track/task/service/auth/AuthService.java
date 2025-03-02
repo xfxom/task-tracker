@@ -1,4 +1,4 @@
-package com.track.task.service;
+package com.track.task.service.auth;
 
 
 import com.track.task.dto.request.SignIn;

@@ -1,4 +1,4 @@
-package com.track.task.service.impl.auth;
+package com.track.task.service.auth.impl;
 
 import com.track.task.dto.request.SignIn;
 import com.track.task.dto.request.SignUp;
@@ -7,8 +7,8 @@ import com.track.task.exception.EmptyException;
 import com.track.task.exception.ExistsException;
 import com.track.task.model.User;
 import com.track.task.security.JwtUtil;
-import com.track.task.service.AuthService;
-import com.track.task.service.UserService;
+import com.track.task.service.auth.AuthService;
+import com.track.task.service.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -18,8 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Slf4j
 @Service
