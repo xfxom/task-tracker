@@ -99,21 +99,20 @@ public class StatusServiceImpl implements StatusService {
                     return new NotFoundException("Status not found");
                 });
 
+        log.debug("Fetched status with id: {} and isGlobal: {}", statusId, status.getIsGlobal());
+
         if (adminUserService.isAdminByEmail(email)) {
             log.debug("Admin delete attempt for status: {}", statusId);
-            if (status.getUser() != null && status.getIsGlobal() != null) {
-                if (status.getIsGlobal()) {
-                    log.debug("Deleting global status: {}", statusId);
-                    statusRepository.deleteById(statusId);
-                    log.info("Successfully deleted global status: {}", statusId);
-                } else {
-                    log.warn("Attempt to delete non-global status by admin: {}", statusId);
-                    throw new ForbiddenException();
-                }
-            }
+            statusRepository.deleteById(statusId);
+            log.info("Successfully deleted status: {}", statusId);
         } else {
-            log.warn("Unauthorized delete attempt by non-admin user: {}", email);
-            throw new ForbiddenException();
+            if (status.getIsGlobal() && status.getUser() != null && status.getUser().getEmail().equals(email)) {
+                statusRepository.deleteById(statusId);
+                log.info("Successfully deleted global status by author: {}", statusId);
+            } else {
+                log.warn("Unauthorized delete attempt by non-author user: {} for status: {}", email, statusId);
+                throw new ForbiddenException("User is not authorized to delete status");
+            }
         }
     }
 }

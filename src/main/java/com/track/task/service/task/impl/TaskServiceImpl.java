@@ -49,14 +49,14 @@ public class TaskServiceImpl implements TaskService {
         Priority priority = priorityService.getById(taskDto.getPriorityId())
                 .orElseThrow(() -> {
                     log.error("[Task] Priority not found: {}", taskDto.getPriorityId());
-                    return new RuntimeException("Priority not found");
+                    return new NotFoundException("Priority not found");
                 });
 
         log.debug("[Task] Fetching status: {}", taskDto.getStatusId());
         Status status = statusService.getById(taskDto.getStatusId())
                 .orElseThrow(() -> {
                     log.error("[Task] Status not found: {}", taskDto.getStatusId());
-                    return new RuntimeException("Status not found");
+                    return new NotFoundException("Status not found");
                 });
 
         Task task = new Task();
@@ -123,7 +123,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> {
                     log.error("[Task] Task not found: {}", taskId);
-                    return new RuntimeException("Task not found");
+                    return new NotFoundException("Task not found");
                 });
 
         if (adminUserService.isAdminByEmail(userEmail)) {
@@ -151,7 +151,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> {
                     log.error("[Task] Update failed - task not found: {}", taskId);
-                    return new RuntimeException("Task not found");
+                    return new NotFoundException("Task not found");
                 });
 
         User user = userService.getUserByEmail(userEmail)
@@ -164,14 +164,14 @@ public class TaskServiceImpl implements TaskService {
         Priority priority = priorityService.getById(taskDto.getPriorityId())
                 .orElseThrow(() -> {
                     log.error("[Task] Priority not found: {}", taskDto.getPriorityId());
-                    return new RuntimeException("Priority not found");
+                    return new NotFoundException("Priority not found");
                 });
 
         log.debug("[Task] Updating status: {}", taskDto.getStatusId());
         Status status = statusService.getById(taskDto.getStatusId())
                 .orElseThrow(() -> {
                     log.error("[Task] Status not found: {}", taskDto.getStatusId());
-                    return new RuntimeException("Status not found");
+                    return new NotFoundException("Status not found");
                 });
 
         log.debug("[Task] Updating title from '{}' to '{}'", task.getTitle(), taskDto.getTitle());
@@ -233,7 +233,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> {
                     log.error("[Task] Task inconsistency detected: {}", taskId);
-                    return new RuntimeException("Task not found");
+                    return new NotFoundException("Task not found");
                 });
 
         if (!task.getUser().getEmail().equals(userEmail) && !adminUserService.isAdminByEmail(userEmail)) {
