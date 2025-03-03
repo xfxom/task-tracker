@@ -1,27 +1,49 @@
 package com.track.task.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<?,?>> handleRuntimeException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", ex.getMessage()));
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public Map<String, String> handleRuntimeException(RuntimeException ex) {
+        log.error("RuntimeException caught: {}", ex.getMessage(), ex);
+        return Map.of("error", ex.getMessage());
     }
     @ExceptionHandler(EmptyException.class)
-    public ResponseEntity<Map<?,?>> handleEmptyException(EmptyException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Map<String, String> handleEmptyException(EmptyException ex) {
+        log.error("EmptyException caught: {}", ex.getMessage(), ex);
+
+        return Map.of("error", ex.getMessage());
     }
 
     @ExceptionHandler(ExistsException.class)
-    public ResponseEntity<Map<?,?>> handleExistsException(ExistsException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public Map<String, String> handleExistsException(ExistsException ex) {
+        log.error("ExistsException caught: {}", ex.getMessage(), ex);
+        return Map.of("error", ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public Map<String, String> handleBadCredentialsException(BadCredentialsException ex) {
+        log.error("BadCredentialsException caught: {}", ex.getMessage(), ex);
+        return Map.of("error", ex.getMessage());
     }
 
 }
