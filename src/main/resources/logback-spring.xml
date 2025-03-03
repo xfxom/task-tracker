@@ -10,9 +10,9 @@
 
     <!-- для файлового лога: полный StackTrace -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/coffee-machine.log</file>
+        <file>logs/task-tracker.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/coffee-machine.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/task-tracker.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
